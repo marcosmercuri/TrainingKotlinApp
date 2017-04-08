@@ -1,21 +1,25 @@
 package com.android.trainingkotlinapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private val NUMBER_OF_COLUMNS = 2
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        button.setOnClickListener {
-            toast(editText.text)
+        recycler.layoutManager = GridLayoutManager(this, NUMBER_OF_COLUMNS)
+        recycler.adapter = ItemAdapter(getItems()) { (id, _, _) ->
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra(DetailActivity.EXTRA_ID, id)
+            startActivity(intent)
         }
-
-        val items = listOf(Item("title 1", "url1"), Item("title 2", "url2"))
-
-        val first = items.sortedBy(Item::title).filter { it.url.isNotBlank() }.first()
     }
 }
